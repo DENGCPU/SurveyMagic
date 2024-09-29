@@ -35,7 +35,7 @@ function QuestionDesigner({ addQuestion }) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-white p-4 rounded-lg shadow">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">Question Type</label>
         <select 
