@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import QuestionDesigner from './QuestionDesigner';
 import SurveyPreview from './SurveyPreview';
-import { StrictModeDroppable } from './StrictModeDroppable';
+import { StrictModeDroppable } from '../utils/StrictModeDroppable';
 
 function SurveyDesigner() {
   const [questions, setQuestions] = useState([]);
