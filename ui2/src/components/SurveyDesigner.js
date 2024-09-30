@@ -6,6 +6,7 @@ import { StrictModeDroppable } from '../utils/StrictModeDroppable';
 
 function SurveyDesigner() {
   const [questions, setQuestions] = useState([]);
+  const [answers, setAnswers] = useState({});
   const surveyPreviewRef = useRef(null);
 
   const addQuestion = (question) => {
@@ -15,6 +16,10 @@ function SurveyDesigner() {
   const removeQuestion = (index) => {
     const newQuestions = questions.filter((_, i) => i !== index);
     setQuestions(newQuestions);
+    // 同时删除对应的答案
+    const newAnswers = { ...answers };
+    delete newAnswers[index];
+    setAnswers(newAnswers);
   };
 
   const onDragEnd = (result) => {
@@ -23,6 +28,26 @@ function SurveyDesigner() {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
     setQuestions(items);
+    
+    // 修改这部分代码以正确重排序答案
+    const newAnswers = {};
+    Object.keys(answers).forEach(key => {
+      const oldIndex = parseInt(key);
+      if (oldIndex === result.source.index) {
+        newAnswers[result.destination.index] = answers[oldIndex];
+      } else if (oldIndex < result.source.index && oldIndex >= result.destination.index) {
+        newAnswers[oldIndex + 1] = answers[oldIndex];
+      } else if (oldIndex > result.source.index && oldIndex <= result.destination.index) {
+        newAnswers[oldIndex - 1] = answers[oldIndex];
+      } else {
+        newAnswers[oldIndex] = answers[oldIndex];
+      }
+    });
+    setAnswers(newAnswers);
+  };
+
+  const handleAnswerChange = (index, value) => {
+    setAnswers({ ...answers, [index]: value });
   };
 
   useEffect(() => {
@@ -43,7 +68,12 @@ function SurveyDesigner() {
           <StrictModeDroppable droppableId="questions">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
-                <SurveyPreview questions={questions} removeQuestion={removeQuestion} />
+                <SurveyPreview 
+                  questions={questions} 
+                  removeQuestion={removeQuestion} 
+                  answers={answers}
+                  handleAnswerChange={handleAnswerChange}
+                />
                 {provided.placeholder}
               </div>
             )}

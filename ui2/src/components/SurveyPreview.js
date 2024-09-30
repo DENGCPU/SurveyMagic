@@ -1,7 +1,7 @@
 import React from 'react';
 import QuestionPreview from './QuestionPreview';
 
-function SurveyPreview({ questions, removeQuestion }) {
+function SurveyPreview({ questions, removeQuestion, answers, handleAnswerChange }) {
   if (questions.length === 0) {
     return <p className="text-gray-500">还没有添加任何问题。</p>;
   }
@@ -14,6 +14,8 @@ function SurveyPreview({ questions, removeQuestion }) {
           question={question}
           index={index}
           removeQuestion={removeQuestion}
+          answer={answers[index]}
+          handleAnswerChange={handleAnswerChange}
         />
       ))}
     </>

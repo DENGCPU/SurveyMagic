@@ -2,7 +2,7 @@ import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { GripVertical, Trash2 } from 'lucide-react';
 
-function QuestionPreview({ question, index, removeQuestion }) {
+function QuestionPreview({ question, index, removeQuestion, answer, handleAnswerChange }) {
   return (
     <Draggable draggableId={`question-${index}`} index={index}>
       {(provided) => (
@@ -28,16 +28,35 @@ function QuestionPreview({ question, index, removeQuestion }) {
               </button>
             </div>
             {question.type === 'Short Text' && (
-              <input type="text" placeholder="短答案" className="w-full p-2 border rounded-md" />
+              <input 
+                type="text" 
+                placeholder="短答案" 
+                className="w-full p-2 border rounded-md"
+                value={answer || ''}
+                onChange={(e) => handleAnswerChange(index, e.target.value)}
+              />
             )}
             {question.type === 'Long Text' && (
-              <textarea placeholder="长答案" className="w-full p-2 border rounded-md" rows="3"></textarea>
+              <textarea 
+                placeholder="长答案" 
+                className="w-full p-2 border rounded-md" 
+                rows="3"
+                value={answer || ''}
+                onChange={(e) => handleAnswerChange(index, e.target.value)}
+              ></textarea>
             )}
             {question.type === 'Multiple Choice' && (
               <div className="space-y-2">
                 {question.options.map((option, optionIndex) => (
                   <div key={optionIndex} className="flex items-center">
-                    <input type="radio" id={`q${index}-o${optionIndex}`} name={`question-${index}`} className="mr-2" />
+                    <input 
+                      type="radio" 
+                      id={`q${index}-o${optionIndex}`} 
+                      name={`question-${index}`} 
+                      className="mr-2"
+                      checked={answer === option}
+                      onChange={() => handleAnswerChange(index, option)}
+                    />
                     <label htmlFor={`q${index}-o${optionIndex}`}>{option}</label>
                   </div>
                 ))}
@@ -47,7 +66,25 @@ function QuestionPreview({ question, index, removeQuestion }) {
               <div className="space-y-2">
                 {question.options.map((option, optionIndex) => (
                   <div key={optionIndex} className="flex items-center">
-                    <input type="checkbox" id={`q${index}-o${optionIndex}`} name={`question-${index}`} className="mr-2" />
+                    <input 
+                      type="checkbox" 
+                      id={`q${index}-o${optionIndex}`} 
+                      name={`question-${index}`} 
+                      className="mr-2"
+                      checked={(answer || []).includes(option)}
+                      onChange={(e) => {
+                        const newAnswer = answer ? [...answer] : [];
+                        if (e.target.checked) {
+                          newAnswer.push(option);
+                        } else {
+                          const index = newAnswer.indexOf(option);
+                          if (index > -1) {
+                            newAnswer.splice(index, 1);
+                          }
+                        }
+                        handleAnswerChange(index, newAnswer);
+                      }}
+                    />
                     <label htmlFor={`q${index}-o${optionIndex}`}>{option}</label>
                   </div>
                 ))}
