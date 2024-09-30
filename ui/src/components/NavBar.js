@@ -16,7 +16,7 @@ function NavBar({ user, setShowSignIn }) {
         <div>
           {user && !isAnonymous ? (
             <div className="flex items-center">
-              <span className="text-white mr-4">{user.email}</span>
+              <span className="text-white mr-4">{user.displayName ||user.email}</span>
               <button
                 onClick={handleSignOut}
                 className="bg-white text-indigo-600 px-4 py-2 rounded hover:bg-indigo-100"

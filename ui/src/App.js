@@ -14,6 +14,7 @@ function App() {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
+        console.log({currentUser})
       } else {
         signInAnonymously(auth).catch((error) => {
           console.error('匿名登录失败:', error);
